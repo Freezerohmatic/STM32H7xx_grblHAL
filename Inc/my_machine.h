@@ -27,7 +27,7 @@
 //#define BOARD_BTT_OCTOPUS_MAX // BTT Octopus Max board.
 //#define BOARD_WEACT_MINI_H743 // WeAct MiniSTM32H743 board.
 //#define BOARD_REFERENCE       // grblHAL reference board map.
-//#define BOARD_MY_MACHINE      // Add my_machine_map.h before enabling this!
+#define BOARD_MY_MACHINE      // Add my_machine_map.h before enabling this!
 
 #if defined(NUCLEO_H743) || defined(NUCLEO_H723)
 #define IS_NUCLEO_DEVKIT 1
@@ -47,8 +47,8 @@
 // If none are specified the default PWM spindle is instantiated.
 // Spindle definitions can be found in grbl/spindle_control.h.
 // More here https://github.com/grblHAL/Plugins_spindle
-//#define SPINDLE0_ENABLE         SPINDLE_HUANYANG1
-//#define SPINDLE1_ENABLE         SPINDLE_PWM0
+#define SPINDLE0_ENABLE         SPINDLE_STEPPER
+#define SPINDLE1_ENABLE         SPINDLE_PWM0
 //#define SPINDLE2_ENABLE         SPINDLE_NONE
 //#define SPINDLE3_ENABLE         SPINDLE_NONE
 //#define SPINDLE_OFFSET          1 // Uncomment to enable settings for laser spindle XY-offset.
@@ -75,10 +75,10 @@
 //#define EMBROIDERY_ENABLE       1 // Embroidery plugin. To be completed.
 //#define PLASMA_ENABLE           1 // Plasma (THC) plugin. To be completed.
 //#define TRINAMIC_ENABLE      2130 // Trinamic TMC2130 stepper driver support.
-//#define TRINAMIC_ENABLE      5160 // Trinamic TMC5160 stepper driver support.
-//#define TRINAMIC_R_SENSE      110 // R sense resistance in milliohms, 2130 and 2209 default is 110, 5160 is 75.
+#define TRINAMIC_ENABLE      5160 // Trinamic TMC5160 stepper driver support.
+#define TRINAMIC_R_SENSE      75 // R sense resistance in milliohms, 2130 and 2209 default is 110, 5160 is 75.
 //#define TRINAMIC_I2C            1 // Trinamic I2C - SPI bridge interface.
-//#define TRINAMIC_DEV            1 // Development mode, adds a few M-codes to aid debugging. Do not enable in production code.
+#define TRINAMIC_DEV            1 // Development mode, adds a few M-codes to aid debugging. Do not enable in production code.
 //#define EEPROM_ENABLE          16 // I2C EEPROM/FRAM support. Set to 16 for 2K, 32 for 4K, 64 for 8K, 128 for 16K and 256 for 16K capacity.
 //#define EEPROM_IS_FRAM          1 // Uncomment when EEPROM is enabled and chip is FRAM, this to remove write delay.
 //#define ESTOP_ENABLE            0 // When enabled only real-time report requests will be executed when the reset pin is asserted.
@@ -95,7 +95,7 @@
 // Optional control signals:
 // These will be assigned to aux input pins. Use the $pins command to check which pins are assigned.
 // NOTE: If not enough pins are available assignment will silently fail.
-//#define PROBE_ENABLE            0 // Default enabled, remove comment to disable probe input.
+#define PROBE_ENABLE            0 // Default enabled, remove comment to disable probe input.
 //#define SAFETY_DOOR_ENABLE      1
 //#define MOTOR_FAULT_ENABLE      1
 //#define MOTOR_WARNING_ENABLE    1
