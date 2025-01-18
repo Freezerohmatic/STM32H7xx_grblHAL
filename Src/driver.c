@@ -31,6 +31,7 @@
 #include "driver.h"
 #include "serial.h"
 
+
 #define AUX_DEVICES // until all drivers are converted?
 #ifndef AUX_CONTROLS
 #define AUX_CONTROLS (AUX_CONTROL_SPINDLE|AUX_CONTROL_COOLANT)
@@ -1191,10 +1192,12 @@ static void stepperClaimMotor (uint_fast8_t axis_id, bool claim)
         step_pulse.inject.claimed.mask |= ((1 << axis_id) & AXES_BITMASK);
     else
         step_pulse.inject.claimed.mask &= ~(1 << axis_id);
+
 }
 
 void stepperOutputStep (axes_signals_t step_out, axes_signals_t dir_out)
 {
+
     if(step_out.bits) {
 
         uint_fast8_t idx = N_AXIS - 1, mask = 1 << (N_AXIS - 1);
@@ -1265,7 +1268,7 @@ void stepperOutputStep (axes_signals_t step_out, axes_signals_t dir_out)
         if(step_pulse.delay == 0)
             inject_step(step_out, step_out);
 
-        hal.timer.start(step_pulse.inject.timer, step_pulse.length);
+        //hal.timer.start(step_pulse.inject.timer, step_pulse.length);
     }
 }
 
@@ -2552,6 +2555,11 @@ bool driver_init (void)
     hal.stepper.cycles_per_tick = stepperCyclesPerTick;
     hal.stepper.pulse_start = stepperPulseStart;
     hal.stepper.motor_iterator = motor_iterator;
+#ifdef STEP_INJECT_ENABLE
+    //NEED TO ADD?
+#endif
+
+
 #ifdef GANGING_ENABLED
     hal.stepper.get_ganged = getGangedAxes;
 #endif
