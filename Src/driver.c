@@ -89,6 +89,7 @@
 
 #define DRIVER_IRQMASK (LIMIT_MASK|CONTROL_MASK|DEVICES_IRQ_MASK)
 
+//this does not handle different ports?
 #if DRIVER_IRQMASK != (LIMIT_MASK_SUM+CONTROL_MASK_SUM+DEVICES_IRQ_MASK_SUM)
 #error Interrupt enabled input pins must have unique pin numbers!
 #endif
@@ -1268,7 +1269,7 @@ void stepperOutputStep (axes_signals_t step_out, axes_signals_t dir_out)
         if(step_pulse.delay == 0)
             inject_step(step_out, step_out);
 
-        //hal.timer.start(step_pulse.inject.timer, step_pulse.length);
+        hal.timer.start(step_pulse.inject.timer, step_pulse.length);
     }
 }
 
