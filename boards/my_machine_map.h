@@ -201,16 +201,15 @@
 #define SAFETY_DOOR_PORT            AUXINPUT0_PORT
 #define SAFETY_DOOR_PIN             AUXINPUT0_PIN
 #endif
-
+/*
 #if PROBE_ENABLE
 #define PROBE_PORT                  AUXINPUT1_PORT
 #define PROBE_PIN                   AUXINPUT1_PIN
-#endif
+#endif*/
 
 #define CONTROL_INMODE              GPIO_SINGLE
 
-/*
-//not supported
+
 #if TRINAMIC_UART_ENABLE
 
 #define MOTOR_UARTX_PORT            GPIOG
@@ -245,18 +244,21 @@
 #define MOTOR_UARTM7_PIN            9
 #endif
 
-#endif//TRINAMIC_UART_ENABLE
-*/
+//#endif//TRINAMIC_UART_ENABLE
 
-#ifdef TRINAMIC_SPI_ENABLE
+#elif TRINAMIC_SPI_ENABLE
 
 // The BTT Octopus Pro uses hardware SPI1 for Trinamic drivers
+
+
 #define TRINAMIC_MOSI_PORT          GPIOA
 #define TRINAMIC_MOSI_PIN           7
 #define TRINAMIC_SCK_PORT           GPIOA
 #define TRINAMIC_SCK_PIN            5
 #define TRINAMIC_MISO_PORT          GPIOA
 #define TRINAMIC_MISO_PIN           6
+
+
 
 #define MOTOR_CSX_PORT              GPIOC
 #define MOTOR_CSX_PIN               4
@@ -291,5 +293,14 @@
 #endif
 
 #endif
+
+#if SDCARD_ENABLE
+#define SD_CS_PORT              GPIOA
+#define SD_CS_PIN               4
+#endif
+
+#define CAN_PORT                    GPIOD
+#define CAN_RX_PIN                  0
+#define CAN_TX_PIN                  1
 
 // EOF

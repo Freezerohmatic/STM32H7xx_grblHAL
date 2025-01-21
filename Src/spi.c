@@ -157,7 +157,8 @@ void spi_init (void)
             .Pin = GPIO_PIN_5|GPIO_PIN_6|GPIO_PIN_7,
             .Mode = GPIO_MODE_AF_PP,
             .Pull = GPIO_NOPULL,
-            .Speed = GPIO_SPEED_FREQ_HIGH,
+            .Speed = GPIO_SPEED_FREQ_VERY_HIGH,
+            //.Speed = GPIO_SPEED_FREQ_HIGH,
             .Alternate = GPIO_AF5_SPI1,
         };
         HAL_GPIO_Init(GPIOA, &GPIO_InitStruct);
