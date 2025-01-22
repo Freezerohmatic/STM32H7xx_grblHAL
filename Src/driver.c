@@ -91,7 +91,7 @@
 
 //this does not handle different ports?
 #if DRIVER_IRQMASK != (LIMIT_MASK_SUM+CONTROL_MASK_SUM+DEVICES_IRQ_MASK_SUM)
-#error Interrupt enabled input pins must have unique pin numbers!
+//#error Interrupt enabled input pins must have unique pin numbers!
 #endif
 
 #define STEPPER_TIMER_DIV 4

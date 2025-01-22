@@ -89,8 +89,8 @@
 #define M3_STEP_PIN                 4
 #define M3_DIRECTION_PORT           GPIOC
 #define M3_DIRECTION_PIN            1
-//#define M3_LIMIT_PORT               GPIOG 
-//#define M3_LIMIT_PIN                11       // MIN4
+#define M3_LIMIT_PORT               GPIOG 
+#define M3_LIMIT_PIN                11       // MIN4
 #define M3_ENABLE_PORT              GPIOA
 #define M3_ENABLE_PIN               2       // EN for M3 motor
 #endif
@@ -102,8 +102,8 @@
 #define M4_STEP_PIN                 9
 #define M4_DIRECTION_PORT           GPIOF
 #define M4_DIRECTION_PIN            10
-//#define M4_LIMIT_PORT               GPIOG   
-//#define M4_LIMIT_PIN                12       // MIN5
+#define M4_LIMIT_PORT               GPIOG   
+#define M4_LIMIT_PIN                12       // MIN5
 #define M4_ENABLE_PORT              GPIOG
 #define M4_ENABLE_PIN               2      // EN for M4
 #endif
