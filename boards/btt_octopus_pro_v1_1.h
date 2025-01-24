@@ -34,6 +34,7 @@
 #define SERIAL_PORT                 32      // GPIOD: TX = 8, RX = 9
 #define I2C_PORT                    1       // GPIOB: SCL = 8, SDA = 9
 #define SPI_PORT                    1       // GPIOA: SCK = 5, MISO = 6, MOSI = 7
+//#define TRINAMIC_SOFT_SPI
 
 // Motor Reference:
 // Motor-1: X-axis
@@ -250,7 +251,6 @@
 
 // The BTT Octopus Pro uses hardware SPI1 for Trinamic drivers
 
-
 #define TRINAMIC_MOSI_PORT          GPIOA
 #define TRINAMIC_MOSI_PIN           7
 #define TRINAMIC_SCK_PORT           GPIOA
@@ -258,7 +258,10 @@
 #define TRINAMIC_MISO_PORT          GPIOA
 #define TRINAMIC_MISO_PIN           6
 
-
+//This adds slight delay after CS IO pin changes
+#ifndef TRINAMIC_SOFT_SPI
+#define TRINAMIC_SPI_IO_DELAY
+#endif
 
 #define MOTOR_CSX_PORT              GPIOC
 #define MOTOR_CSX_PIN               4
@@ -297,6 +300,8 @@
 #if SDCARD_ENABLE
 #define SD_CS_PORT              GPIOA
 #define SD_CS_PIN               4
+//#define SD_DETECT_GPIO_PORT     GPIOC
+//#define SD_DETECT_PIN           14
 #endif
 
 #define CAN_PORT                    GPIOD
