@@ -31,9 +31,14 @@
 #define BOARD_NAME "BTT Octopus Pro v1.1"
 #define BOARD_URL "https://github.com/bigtreetech/BIGTREETECH-OCTOPUS-Pro"
 
-#define SERIAL_PORT                 32      // GPIOD: TX = 8, RX = 9
+#define SERIAL_PORT                 1       // GPIOA: TX = 9, RX = 10,  USART 1
+#define SERIAL1_PORT                21      // GPIOD: TX = 5, RX = 6,   USART 2
+#define SERIAL2_PORT                32      // GPIOD: TX = 8, RX = 9,   USART 3
 #define I2C_PORT                    1       // GPIOB: SCL = 8, SDA = 9
 #define SPI_PORT                    1       // GPIOA: SCK = 5, MISO = 6, MOSI = 7
+//we have multiple SPI but only one can be used, for now
+//#define SPI_PORT                  12       // GPIOB: SCK = 3, MISO = 4, MOSI = 5
+
 //#define TRINAMIC_SOFT_SPI
 
 // Motor Reference:
@@ -147,62 +152,96 @@
 #endif
 
 //this might need to be changed
-//needs to be pwm_signal_t pwm_pin[] array in pwm.c?
-#define AUXOUTPUT0_PORT             GPIOA   // Spindle PWM - FAN1
+
+//needs to be in pwm_signal_t pwm_pin[] array in pwm.c?
+#define AUXOUTPUT0_PORT             GPIOA   // Spindle PWM - FAN0
 #define AUXOUTPUT0_PIN              8
-#define AUXOUTPUT1_PORT             GPIOD   // Spindle direction - FAN5
-#define AUXOUTPUT1_PIN              15
-#define AUXOUTPUT2_PORT             GPIOD   // Spindle enable - FAN4
-#define AUXOUTPUT2_PIN              14
-#define AUXOUTPUT3_PORT             GPIOA   // Coolant flood - HE0
-#define AUXOUTPUT3_PIN              0
-#define AUXOUTPUT4_PORT             GPIOA   // Coolant mist - HE1
-#define AUXOUTPUT4_PIN              3
-#define AUXOUTPUT5_PORT             GPIOB   // Coolant mist - HE2
-#define AUXOUTPUT5_PIN              0
-#define AUXOUTPUT6_PORT             GPIOB   // Coolant mist - HE3
-#define AUXOUTPUT6_PIN              11
+
+#define AUXOUTPUT1_PORT             GPIOE   // - FAN1
+#define AUXOUTPUT1_PIN              5
+
+#define AUXOUTPUT2_PORT             GPIOD   // - FAN2
+#define AUXOUTPUT2_PIN              12
+
+#define AUXOUTPUT3_PORT             GPIOD   // - FAN3
+#define AUXOUTPUT3_PIN              13
+
+#define AUXOUTPUT4_PORT             GPIOD   // Spindle enable - FAN4
+#define AUXOUTPUT4_PIN              14
+
+#define AUXOUTPUT5_PORT             GPIOE   // Spindle direction - FAN5
+#define AUXOUTPUT5_PIN              15
+
+#define AUXOUTPUT6_PORT             GPIOA   // Coolant flood - HE0
+#define AUXOUTPUT6_PIN              0
+
+#define AUXOUTPUT7_PORT             GPIOA   // Coolant mist - HE1
+#define AUXOUTPUT7_PIN              3
+/*
+//we need more auxoutput ports defined in outputpin[] to use the full outputs
+#define AUXOUTPUT8_PORT             GPIOB   // - HE2
+#define AUXOUTPUT8_PIN              0
+
+#define AUXOUTPUT9_PORT             GPIOB   // - HE3
+#define AUXOUTPUT9_PIN              11
+
+#define AUXOUTPUT10_PORT            GPIOA   // - Bed-out
+#define AUXOUTPUT10_PIN             1
+
+#define AUXOUTPUT11_PORT            GPIOB   // - RGB
+#define AUXOUTPUT11_PIN             10
+*/
+
+
 
 // Define driver spindle pins.
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_ENA
-#define SPINDLE_ENABLE_PORT         AUXOUTPUT2_PORT
-#define SPINDLE_ENABLE_PIN          AUXOUTPUT2_PIN
+#define SPINDLE_ENABLE_PORT         AUXOUTPUT4_PORT
+#define SPINDLE_ENABLE_PIN          AUXOUTPUT4_PIN
 #endif
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_PWM
 #define SPINDLE_PWM_PORT            AUXOUTPUT0_PORT
 #define SPINDLE_PWM_PIN             AUXOUTPUT0_PIN
 #endif
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_DIR
-#define SPINDLE_DIRECTION_PORT      AUXOUTPUT1_PORT
-#define SPINDLE_DIRECTION_PIN       AUXOUTPUT1_PIN
+#define SPINDLE_DIRECTION_PORT      AUXOUTPUT5_PORT
+#define SPINDLE_DIRECTION_PIN       AUXOUTPUT5_PIN
 #endif
 
 // Define flood and mist coolant enable output pins.
 #if COOLANT_ENABLE & COOLANT_FLOOD
-#define COOLANT_FLOOD_PORT          AUXOUTPUT3_PORT
-#define COOLANT_FLOOD_PIN           AUXOUTPUT3_PIN
+#define COOLANT_FLOOD_PORT          AUXOUTPUT6_PORT
+#define COOLANT_FLOOD_PIN           AUXOUTPUT6_PIN
 #endif
 #if COOLANT_ENABLE & COOLANT_MIST
-#define COOLANT_MIST_PORT           AUXOUTPUT4_PORT
-#define COOLANT_MIST_PIN            AUXOUTPUT4_PIN
+#define COOLANT_MIST_PORT           AUXOUTPUT7_PORT
+#define COOLANT_MIST_PIN            AUXOUTPUT7_PIN
 #endif
 
 // Define user-control controls (cycle start, reset, feed hold) input pins.
-#define RESET_PORT                  GPIOF
-#define RESET_PIN                   3       //TB
-#define FEED_HOLD_PORT              GPIOF
-#define FEED_HOLD_PIN               4       //T0
-#define CYCLE_START_PORT            GPIOF 
-#define CYCLE_START_PIN             5       //T1
+#define RESET_PORT                  GPIOF   //TB
+#define RESET_PIN                   3       
 
-#define AUXINPUT0_PORT              GPIOC
-#define AUXINPUT0_PIN               0       // PWR-DET
+#define FEED_HOLD_PORT              GPIOF   //T0
+#define FEED_HOLD_PIN               4    
 
-#define AUXINPUT1_PORT              GPIOB
-#define AUXINPUT1_PIN               6       // Z probe "left"
+#define CYCLE_START_PORT            GPIOF   //T1
+#define CYCLE_START_PIN             5    
 
-#define AUXINPUT2_PORT              GPIOB
-#define AUXINPUT2_PIN               7       // Z probe "right"
+#define AUXINPUT0_PORT              GPIOC   // PWR-DET
+#define AUXINPUT0_PIN               0    
+
+#define AUXINPUT1_PORT              GPIOB   // Z probe "left"
+#define AUXINPUT1_PIN               6    
+
+#define AUXINPUT2_PORT              GPIOB   // Z probe "right"
+#define AUXINPUT2_PIN               7    
+
+#define AUXINPUT3_PORT              GPIOB   //Button on PCB
+#define AUXINPUT3_PIN               2    
+
+#define AUXINTPUT0_ANALOG_PORT      GPIOE   //PS-ON
+#define AUXINTPUT0_ANALOG_PIN       11
 
 #if SAFETY_DOOR_ENABLE
 #define SAFETY_DOOR_PORT            AUXINPUT0_PORT
@@ -216,6 +255,10 @@
 
 #define CONTROL_INMODE              GPIO_SINGLE
 
+//Pins not used
+// DC Probe pin? Connect to a EL357C on GPIOC 5 conflicts with T1/cycle start but this may be preferred as it is optocoupled. Only one?
+
+// end of chaning without notice
 
 #if TRINAMIC_UART_ENABLE
 
