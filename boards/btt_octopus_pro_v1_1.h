@@ -260,7 +260,7 @@
 
 //Pins not used
 // DC Probe pin? Connect to a EL357C on GPIOC 5 conflicts with T1/cycle start but this may be preferred as it is optocoupled. Only one?
-// PS-ON us not used due to conflix with limit switches. Can be used as an analog in
+// PS-ON us not used due to conflict with limit switches. Can be used as an analog in
 
 // end of chaning without notice
 
