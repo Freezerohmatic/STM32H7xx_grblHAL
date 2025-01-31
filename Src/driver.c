@@ -3162,7 +3162,7 @@ void EXTI9_5_IRQHandler(void)
             hal.control.interrupt_callback(systemGetState());
 #endif
 #if (LIMIT_MASK|SD_DETECT_BIT) & 0x03E0
-        if(ifg & (LIMIT_MASK/*|SD_DETECT_BIT*/))
+        if(ifg & (LIMIT_MASK|SD_DETECT_BIT))
             core_pin_irq(ifg);
 #endif
 #if AUXINPUT_MASK & 0x03E0
@@ -3208,7 +3208,7 @@ void EXTI15_10_IRQHandler(void)
             hal.control.interrupt_callback(systemGetState());
 #endif
 #if (LIMIT_MASK|SD_DETECT_BIT) & 0xFC00
-        if(ifg & (LIMIT_MASK/*|SD_DETECT_BIT*/))
+        if(ifg & (LIMIT_MASK|SD_DETECT_BIT))
             core_pin_irq(ifg);
 #endif
 #if AUXINPUT_MASK & 0xFC00
