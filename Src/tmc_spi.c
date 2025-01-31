@@ -141,7 +141,7 @@ TMC_spi_status_t tmc_spi_read (trinamic_motor_t driver, TMC_spi_datagram_t *data
     TMC_spi_status_t status;
 
     DIGITAL_OUT(cs[driver.id].port, 1 << cs[driver.id].pin, 0);
-    IODelay();
+    //IODelay();
     datagram->payload.value = 0;
 
     datagram->addr.write = 0;
@@ -154,7 +154,7 @@ TMC_spi_status_t tmc_spi_read (trinamic_motor_t driver, TMC_spi_datagram_t *data
     DIGITAL_OUT(cs[driver.id].port, 1 << cs[driver.id].pin, 1);
     delay(TRINAMIC_SPI_DELAY*2);
     DIGITAL_OUT(cs[driver.id].port, 1 << cs[driver.id].pin, 0);
-    IODelay();
+    //IODelay();
 
     status = spi_put_byte(datagram->addr.value);
     datagram->payload.data[3] = spi_get_byte();
@@ -173,7 +173,7 @@ TMC_spi_status_t tmc_spi_write (trinamic_motor_t driver, TMC_spi_datagram_t *dat
     TMC_spi_status_t status;
 
     DIGITAL_OUT(cs[driver.id].port, 1 << cs[driver.id].pin, 0);
-    IODelay();
+    //IODelay();
 
     datagram->addr.write = 1;
     status = spi_put_byte(datagram->addr.value);
@@ -249,7 +249,7 @@ void if_init(uint8_t motors, axes_signals_t enabled)
 
 #else
     spi_init();
-    spi_set_speed(SPI_BAUDRATEPRESCALER_32); //changed from _32
+    spi_set_speed(SPI_BAUDRATEPRESCALER_16); //changed from _32
     // 48 MHz SPI clock / 32 = 1.5MHz
 #endif //TRINAMIC_SOFT_SPI
 

@@ -154,11 +154,14 @@
 #define AUXOUTPUT1_PIN              15
 #define AUXOUTPUT2_PORT             GPIOD   // Spindle enable - FAN4
 #define AUXOUTPUT2_PIN              14
-
 #define AUXOUTPUT3_PORT             GPIOA   // Coolant flood - HE0
 #define AUXOUTPUT3_PIN              0
 #define AUXOUTPUT4_PORT             GPIOA   // Coolant mist - HE1
 #define AUXOUTPUT4_PIN              3
+#define AUXOUTPUT5_PORT             GPIOB   // Coolant mist - HE2
+#define AUXOUTPUT5_PIN              0
+#define AUXOUTPUT6_PORT             GPIOB   // Coolant mist - HE3
+#define AUXOUTPUT6_PIN              11
 
 // Define driver spindle pins.
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_ENA
@@ -185,28 +188,31 @@
 #endif
 
 // Define user-control controls (cycle start, reset, feed hold) input pins.
-#define RESET_PORT                  GPIOE
-#define RESET_PIN                   11      // PS-ON 
-#define FEED_HOLD_PORT              GPIOB
-#define FEED_HOLD_PIN               1       // IND-PROBE
-#define CYCLE_START_PORT            GPIOB 
-#define CYCLE_START_PIN             2       // FWS
+#define RESET_PORT                  GPIOF
+#define RESET_PIN                   3       //TB
+#define FEED_HOLD_PORT              GPIOF
+#define FEED_HOLD_PIN               4       //T0
+#define CYCLE_START_PORT            GPIOF 
+#define CYCLE_START_PIN             5       //T1
 
 #define AUXINPUT0_PORT              GPIOC
 #define AUXINPUT0_PIN               0       // PWR-DET
 
 #define AUXINPUT1_PORT              GPIOB
-#define AUXINPUT1_PIN               6      // Z probe //pb7 can also be used
+#define AUXINPUT1_PIN               6       // Z probe "left"
+
+#define AUXINPUT2_PORT              GPIOB
+#define AUXINPUT2_PIN               7       // Z probe "right"
 
 #if SAFETY_DOOR_ENABLE
 #define SAFETY_DOOR_PORT            AUXINPUT0_PORT
 #define SAFETY_DOOR_PIN             AUXINPUT0_PIN
 #endif
-/*
+
 #if PROBE_ENABLE
 #define PROBE_PORT                  AUXINPUT1_PORT
 #define PROBE_PIN                   AUXINPUT1_PIN
-#endif*/
+#endif
 
 #define CONTROL_INMODE              GPIO_SINGLE
 
@@ -298,10 +304,11 @@
 #endif
 
 #if SDCARD_ENABLE
-#define SD_CS_PORT              GPIOA
-#define SD_CS_PIN               4
-//#define SD_DETECT_GPIO_PORT     GPIOC
-//#define SD_DETECT_PIN           14
+// #define SD_CS_PORT               GPIOA
+// #define SD_CS_PIN                4
+// #define SD_DETECT_GPIO_PORT      GPIOC
+#define SD_DETECT_PORT              GPIOC
+#define SD_DETECT_PIN               14
 #endif
 
 #define CAN_PORT                    GPIOD
