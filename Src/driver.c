@@ -31,7 +31,6 @@
 #include "driver.h"
 #include "serial.h"
 
-
 #define AUX_DEVICES // until all drivers are converted?
 #ifndef AUX_CONTROLS
 #define AUX_CONTROLS (AUX_CONTROL_SPINDLE|AUX_CONTROL_COOLANT)
@@ -89,9 +88,8 @@
 
 #define DRIVER_IRQMASK (LIMIT_MASK|CONTROL_MASK|DEVICES_IRQ_MASK)
 
-//this does not handle different ports?
 #if DRIVER_IRQMASK != (LIMIT_MASK_SUM+CONTROL_MASK_SUM+DEVICES_IRQ_MASK_SUM)
-//#error Interrupt enabled input pins must have unique pin numbers!
+#error Interrupt enabled input pins must have unique pin numbers!
 #endif
 
 #define STEPPER_TIMER_DIV 4
