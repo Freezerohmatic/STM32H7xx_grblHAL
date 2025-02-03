@@ -1199,7 +1199,6 @@ static void stepperClaimMotor (uint_fast8_t axis_id, bool claim)
 
 void stepperOutputStep (axes_signals_t step_out, axes_signals_t dir_out)
 {
-
     if(step_out.bits) {
 
         uint_fast8_t idx = N_AXIS - 1, mask = 1 << (N_AXIS - 1);
