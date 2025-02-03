@@ -152,8 +152,6 @@
 #define M7_ENABLE_PIN               0       // EN for M5 motor
 #endif
 
-//this might need to be changed
-
 //needs to be in pwm_signal_t pwm_pin[] array in pwm.c?
 #define AUXOUTPUT0_PORT             GPIOA   // Spindle PWM - FAN0
 #define AUXOUTPUT0_PIN              8
@@ -260,43 +258,41 @@
 #define CONTROL_INMODE              GPIO_SINGLE
 
 //Pins not used
-// DC Probe pin? Connect to a EL357C on GPIOC 5 conflicts with T1/cycle start but this may be preferred as it is optocoupled. Only one?
-// PS-ON us not used due to conflict with limit switches. Can be used as an analog in
+// DC Probe pin? Connected to an EL357C on GPIOC5 conflicts with T1/cycle start but this may be preferred as it is optocoupled. Only one?
+// PS-ON is not used due to conflict with limit switches. Can be used as an analog in.
 
-// end of chaning without notice
+#if TRINAMIC_UART_ENABLE //Not tested, use with care
 
-#if TRINAMIC_UART_ENABLE
-
-#define MOTOR_UARTX_PORT            GPIOG
-#define MOTOR_UARTX_PIN             14
-#define MOTOR_UARTY_PORT            GPIOG
-#define MOTOR_UARTY_PIN             13
-#define MOTOR_UARTZ_PORT            GPIOG
-#define MOTOR_UARTZ_PIN             12
+#define MOTOR_UARTX_PORT            GPIOC
+#define MOTOR_UARTX_PIN             4
+#define MOTOR_UARTY_PORT            GPIOD
+#define MOTOR_UARTY_PIN             11
+#define MOTOR_UARTZ_PORT            GPIOC
+#define MOTOR_UARTZ_PIN             6
 
 #ifdef  M3_AVAILABLE
-#define MOTOR_UARTM3_PORT           GPIOG
-#define MOTOR_UARTM3_PIN            11
+#define MOTOR_UARTM3_PORT           GPIOC
+#define MOTOR_UARTM3_PIN            7
 #endif
 
 #ifdef  M4_AVAILABLE
-#define MOTOR_UARTM4_PORT           GPIOG
-#define MOTOR_UARTM4_PIN            10
+#define MOTOR_UARTM4_PORT           GPIOF
+#define MOTOR_UARTM4_PIN            2
 #endif
 
 #ifdef  M5_AVAILABLE
-#define MOTOR_UARTM5_PORT           GPIOG
-#define MOTOR_UARTM5_PIN            9
+#define MOTOR_UARTM5_PORT           GPIOE
+#define MOTOR_UARTM5_PIN            4
 #endif
 
 #ifdef  M6_AVAILABLE
-#define MOTOR_UARTM6_PORT           GPIOG
-#define MOTOR_UARTM6_PIN            9
+#define MOTOR_UARTM6_PORT           GPIOE
+#define MOTOR_UARTM6_PIN            1
 #endif
 
 #ifdef  M7_AVAILABLE
-#define MOTOR_UARTM7_PORT           GPIOG
-#define MOTOR_UARTM7_PIN            9
+#define MOTOR_UARTM7_PORT           GPIOD
+#define MOTOR_UARTM7_PIN            3
 #endif
 
 //#endif//TRINAMIC_UART_ENABLE
