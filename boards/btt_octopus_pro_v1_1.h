@@ -355,6 +355,13 @@
 #define SD_DETECT_PIN               14
 #endif
 
+#if ESP_AT_ENABLE
+#define COPROC_RESET_PORT           GPIOG
+#define COPROC_RESET_PIN            7
+/*#define COPROC_BOOT0_PORT           AUXOUTPUT8_PORT
+#define COPROC_BOOT0_PIN            AUXOUTPUT8_PIN*/
+#endif
+
 #define CAN_PORT                    GPIOD
 #define CAN_RX_PIN                  0
 #define CAN_TX_PIN                  1
