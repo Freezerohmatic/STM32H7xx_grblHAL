@@ -130,8 +130,6 @@
   #include "boards/btt_scylla_map.h"
 #elif defined(BOARD_WEACT_MINI)
   #include "boards/weact_mini_map.h"
-#elif defined(BOARD_BTT_OCTOPUS_PRO_v1_1)
-  #include "btt_octopus_pro_v1_1.h"
 #elif defined(BOARD_REFERENCE)
   #include "boards/reference_map.h"
 #elif defined(BOARD_MY_MACHINE)
