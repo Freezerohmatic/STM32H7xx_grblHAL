@@ -337,6 +337,16 @@
 #define MOTOR_CSM7_PIN              3
 #endif
 
+#endif //TRINAMIC_SPI_ENABLE
+
+#if ESP_AT_ENABLE
+#define COPROC_STREAM               SERIAL2_PORT
+#define COPROC_RESET_PORT           GPIOG
+#define COPROC_RESET_PIN            7
+
+//Not needed since the enable pin is pulled high
+//#define COPROC_BOOT0_PORT           
+//#define COPROC_BOOT0_PIN            
 #endif
 
 #define CAN_PORT                    GPIOD
