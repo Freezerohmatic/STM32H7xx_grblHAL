@@ -28,10 +28,19 @@
 #define BOARD_NAME "grblHAL reference map"
 
 
-#define SERIAL_PORT    32   // GPIOD: TX = 8, RX = 9
-#define SERIAL1_PORT    1   // GPIOA: TX = 9, RX = 10
-#define I2C_PORT        1   // GPIOB: SCL = 8, SDA = 9
-#define SPI_PORT        3   // GPIOC: SCK = 10, MISO - 11, MOSI - 12
+#define SERIAL_PORT            32   // GPIOD: TX = 8, RX = 9
+#if USB_SERIAL_CDC
+#define SERIAL1_PORT           11   // GPIOB: TX = 6, RX = 7
+#define COPROC_STREAM           1
+#else
+#define SERIAL1_PORT            1   // GPIOA: TX = 9, RX = 10
+#endif
+#define I2C_PORT                1   // GPIOB: SCL = 8, SDA = 9
+#ifdef SDCARD_SDIO
+#define SPI_PORT                2   // GOPIB: SCK = 13, MISO - 14, MOSI - 15
+#else
+#define SPI_PORT                3   // GPIOC: SCK = 10, MISO - 11, MOSI - 12
+#endif
 #define IS_NUCLEO_BOB
 
 #define ETH_PINOUT      1   // PA1, PA2, PA7, PB13, PC1, PC4, PC5, PG11, PG13
@@ -203,25 +212,23 @@
 #define COOLANT_MIST_PIN        AUXOUTPUT7_PIN
 #endif
 
-// Define user-control CONTROLs (cycle start, reset, feed hold) input pins.
-#define RESET_PORT              GPIOA
-#define RESET_PIN               3
-#define FEED_HOLD_PORT          GPIOC
-#define FEED_HOLD_PIN           0
-#define CYCLE_START_PORT        GPIOF
-#define CYCLE_START_PIN         4
+#if ESP_AT_ENABLE && !(DRIVER_SPINDLE1_ENABLE & SPINDLE_ENA)
+#define COPROC_RESET_PORT       AUXOUTPUT1_PORT
+#define COPROC_RESET_PIN        AUXOUTPUT1_PIN
+#define COPROC_BOOT0_PORT       AUXOUTPUT2_PORT
+#define COPROC_BOOT0_PIN        AUXOUTPUT2_PIN
+#endif
 
-#define CONTROL_INMODE          GPIO_SINGLE
-
-// STM32H7xx - SD card using SDMMC interface instead of SPI
-//#if SDCARD_ENABLE
-//#define SD_CS_PORT              GPIOC
-//#define SD_CS_PIN               8
-//#endif
+/*
+#define AUXINPUT0_ANALOG_PORT   GPIOF
+#define AUXINPUT0_ANALOG_PIN    7
+#define AUXINPUT1_ANALOG_PORT   GPIOF
+#define AUXINPUT1_ANALOG_PIN    8
+*/
 
 #define AUXINPUT0_PORT          GPIOE
 #define AUXINPUT0_PIN           15
-#define AUXINPUT1_PORT          GPIOD
+#define AUXINPUT1_PORT          GPIOD // Safety door
 #define AUXINPUT1_PIN           1
 #define AUXINPUT2_PORT          GPIOF
 #define AUXINPUT2_PIN           2
@@ -229,8 +236,33 @@
 #define AUXINPUT3_PORT          GPIOB
 #define AUXINPUT3_PIN           10
 #endif
-#define AUXINPUT4_PORT          GPIOF
+#define AUXINPUT4_PORT          GPIOF // Probe
 #define AUXINPUT4_PIN           10
+#define AUXINPUT5_PORT          GPIOA // Reset/EStop
+#define AUXINPUT5_PIN           3
+#define AUXINPUT6_PORT          GPIOC // Feed hold
+#define AUXINPUT6_PIN           0
+#define AUXINPUT7_PORT          GPIOF // Cycle start
+#define AUXINPUT7_PIN           4
+
+// Define user-control controls (cycle start, reset, feed hold) input pins.
+#if CONTROL_ENABLE & CONTROL_HALT
+#define RESET_PORT              AUXINPUT5_PORT
+#define RESET_PIN               AUXINPUT5_PIN
+#endif
+#if CONTROL_ENABLE & CONTROL_FEED_HOLD
+#define FEED_HOLD_PORT          AUXINPUT6_PORT
+#define FEED_HOLD_PIN           AUXINPUT6_PIN
+#endif
+#if CONTROL_ENABLE & CONTROL_CYCLE_START
+#define CYCLE_START_PORT        AUXINPUT7_PORT
+#define CYCLE_START_PIN         AUXINPUT7_PIN
+#endif
+
+#if SAFETY_DOOR_ENABLE
+#define SAFETY_DOOR_PORT        AUXINPUT1_PORT
+#define SAFETY_DOOR_PIN         AUXINPUT1_PIN
+#endif
 
 #if PROBE_ENABLE
 #define PROBE_PORT              AUXINPUT4_PORT
@@ -258,6 +290,17 @@
 #elif MOTOR_FAULT_ENABLE
 #define MOTOR_FAULT_PORT        AUXINPUT1_PORT
 #define MOTOR_FAULT_PIN         AUXINPUT1_PIN
+#endif
+
+#if ETHERNET_ENABLE && defined(_WIZCHIP_)
+#undef SPI_ENABLE
+#define SPI_ENABLE              1
+#define SPI_CS_PORT             GPIOA // CS_JOG_SW
+#define SPI_CS_PIN              4
+#define SPI_IRQ_PORT            GPIOB // RXD_INT
+#define SPI_IRQ_PIN             12
+#define SPI_RST_PORT            GPIOB // TXD_INT
+#define SPI_RST_PIN             3
 #endif
 
 #if MPG_ENABLE == 1

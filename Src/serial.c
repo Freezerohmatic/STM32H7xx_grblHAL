@@ -231,12 +231,12 @@ static const io_stream_t *serial2Init(uint32_t baud_rate);
 #define UART1_TX_PIN 6
 #define UART1_RX_PIN 7
 #define UART1_PORT GPIOC
-#define UART1_AF GPIO_AF8_USART6
+#define UART1_AF GPIO_AF7_USART6
 #elif SERIAL1_PORT == 61
 #define UART1_TX_PIN 14
 #define UART1_RX_PIN 9
 #define UART1_PORT GPIOG
-#define UART1_AF GPIO_AF8_USART6
+#define UART1_AF GPIO_AF7_USART6
 #else
 #error Code has to be added to support serial port 1
 #endif
@@ -676,7 +676,7 @@ static const io_stream_t *serialInit (uint32_t baud_rate)
 
     serialSetBaudRate(baud_rate);
 
-    HAL_NVIC_SetPriority(UART0_IRQ, 0, 0);
+    HAL_NVIC_SetPriority(UART0_IRQ, 1, 0);
     HAL_NVIC_EnableIRQ(UART0_IRQ);
 
     return &stream;
@@ -907,7 +907,7 @@ static const io_stream_t *serial1Init (uint32_t baud_rate)
 
     serial1SetBaudRate(baud_rate);
 
-    HAL_NVIC_SetPriority(UART1_IRQ, 0, 0);
+    HAL_NVIC_SetPriority(UART1_IRQ, 1, 0);
     HAL_NVIC_EnableIRQ(UART1_IRQ);
 
     return &stream;
@@ -1138,7 +1138,7 @@ static const io_stream_t *serial2Init (uint32_t baud_rate)
 
     serial2SetBaudRate(baud_rate);
 
-    HAL_NVIC_SetPriority(UART2_IRQ, 0, 0);
+    HAL_NVIC_SetPriority(UART2_IRQ, 1, 0);
     HAL_NVIC_EnableIRQ(UART2_IRQ);
 
     return &stream;

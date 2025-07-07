@@ -102,7 +102,7 @@
 #define M4_ENABLE_PIN               13
 #endif
 
-#define AUXOUTPUT0_PORT             GPIOB                       // Spindle PWM - EXP1 - PB0, pin 9
+#define AUXOUTPUT0_PORT             GPIOB                       // Spindle PWM - EXP1 - pin 9
 #define AUXOUTPUT0_PIN              0
 #define AUXOUTPUT1_PORT             GPIOB                       // Spindle direction - FAN2
 #define AUXOUTPUT1_PIN              5
@@ -112,6 +112,10 @@
 #define AUXOUTPUT3_PIN              3
 #define AUXOUTPUT4_PORT             GPIOB                       // Coolant mist - HEAT1
 #define AUXOUTPUT4_PIN              4
+#define AUXOUTPUT5_PORT             GPIOB                       // ESP32 IO0
+#define AUXOUTPUT5_PIN              10
+#define AUXOUTPUT6_PORT             GPIOC                       // ESP32 RST
+#define AUXOUTPUT6_PIN              14
 
 // Define driver spindle pins.
 #if DRIVER_SPINDLE_ENABLE & SPINDLE_ENA
@@ -137,18 +141,38 @@
 #define COOLANT_MIST_PIN            AUXOUTPUT4_PIN
 #endif
 
+#if ESP_AT_ENABLE
+#define COPROC_RESET_PORT           AUXOUTPUT6_PORT
+#define COPROC_RESET_PIN            AUXOUTPUT6_PIN
+#define COPROC_BOOT0_PORT           AUXOUTPUT5_PORT
+#define COPROC_BOOT0_PIN            AUXOUTPUT5_PIN
+#endif
+
+#define AUXINPUT0_PORT              GPIOA                       // Safety door - EXP2 - pin 5
+#define AUXINPUT0_PIN               7
+#define AUXINPUT1_PORT              GPIOC                       // Z probe
+#define AUXINPUT1_PIN               13
+#define AUXINPUT2_PORT              GPIOA                       // Reset - EXP2 - pin 7
+#define AUXINPUT2_PIN               4
+#define AUXINPUT3_PORT              GPIOA                       // Feed hold - EXP2 - pin 9
+#define AUXINPUT3_PIN               5
+#define AUXINPUT4_PORT              GPIOA                       // Cycle start - EXP2 - pin 10
+#define AUXINPUT4_PIN               6
+
+
 // Define user-control controls (cycle start, reset, feed hold) input pins.
-// These are all available on EXP2 along with electrical RESET* (EXP2, pin 3)
-#define CONTROL_PORT                GPIOA
-#define RESET_PIN                   4                           // EXP2 - PA4, pin 7
-#define FEED_HOLD_PIN               5                           // EXP2 - PA5, pin 9
-#define CYCLE_START_PIN             6                           // EXP2 - PA6, pin 10
-
-#define AUXINPUT0_PORT              GPIOA
-#define AUXINPUT0_PIN               7                           // EXP2 - PA7, pin 5
-
-#define AUXINPUT1_PORT              GPIOC
-#define AUXINPUT1_PIN               13                          // Z probe
+#if CONTROL_ENABLE & CONTROL_HALT
+#define RESET_PORT                  AUXINPUT2_PORT
+#define RESET_PIN                   AUXINPUT2_PIN
+#endif
+#if CONTROL_ENABLE & CONTROL_FEED_HOLD
+#define FEED_HOLD_PORT              AUXINPUT3_PORT
+#define FEED_HOLD_PIN               AUXINPUT3_PIN
+#endif
+#if CONTROL_ENABLE & CONTROL_CYCLE_START
+#define CYCLE_START_PORT            AUXINPUT4_PORT
+#define CYCLE_START_PIN             AUXINPUT4_PIN
+#endif
 
 #if SAFETY_DOOR_ENABLE
 #define SAFETY_DOOR_PORT            AUXINPUT0_PORT
@@ -159,8 +183,6 @@
 #define PROBE_PORT                  AUXINPUT1_PORT
 #define PROBE_PIN                   AUXINPUT1_PIN
 #endif
-
-#define CONTROL_INMODE              GPIO_SINGLE
 
 #if TRINAMIC_UART_ENABLE
 

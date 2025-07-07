@@ -3,7 +3,7 @@
 
   Part of grblHAL driver for STM32H7xx
 
-  Copyright (c) 2018-2023 Terje Io
+  Copyright (c) 2018-2025 Terje Io
 
   grblHAL is free software: you can redistribute it and/or modify
   it under the terms of the GNU General Public License as published by
@@ -85,6 +85,8 @@
 
 static uint8_t keycode = 0;
 static keycode_callback_ptr keypad_callback = NULL;
+static volatile bool await_rx = false;
+
 static I2C_HandleTypeDef i2c_port = {
     .Instance = I2CPORT,
 #if I2C_KHZ == 100
@@ -104,14 +106,12 @@ static I2C_HandleTypeDef i2c_port = {
     .Init.NoStretchMode = I2C_NOSTRETCH_DISABLE
 };
 
-void i2c_init (void)
+i2c_cap_t i2c_start (void)
 {
-    static bool init_ok = false;
+    static i2c_cap_t cap = {};
 
-    if(init_ok)
-        return;
-
-    init_ok = true;
+    if(cap.started)
+        return cap;
 
     GPIO_InitTypeDef GPIO_InitStruct = {
         .Pin = (1 << I2C_SCL_PIN)|(1 << I2C_SDA_PIN),
@@ -152,6 +152,10 @@ void i2c_init (void)
 
     hal.periph_port.register_pin(&scl);
     hal.periph_port.register_pin(&sda);
+
+    cap.started = cap.tx_non_blocking = On;
+
+    return cap;
 }
 
 void I2C_IRQEVT_Handler (void)
@@ -166,97 +170,75 @@ void I2C_IRQERR_Handler (void)
 
 #endif
 
-bool i2c_probe (uint_fast16_t i2cAddr)
+static inline __attribute__((always_inline)) bool wait_ready (void)
 {
-    //wait for bus to be ready
-    while (HAL_I2C_GetState(&i2c_port) != HAL_I2C_STATE_READY) {
+    while(await_rx && i2c_port.State != HAL_I2C_STATE_READY && __HAL_I2C_GET_FLAG(&i2c_port, I2C_FLAG_BUSY) != RESET) {
         if(!hal.stream_blocking_callback())
             return false;
     }
 
-    return HAL_I2C_IsDeviceReady(&i2c_port, i2cAddr << 1, 4, 10) == HAL_OK;
+    return true;
 }
 
-bool i2c_send (uint_fast16_t i2cAddr, uint8_t *buf, size_t size, bool block)
+bool i2c_probe (i2c_address_t i2cAddr)
 {
-    //wait for bus to be ready
-    while (HAL_I2C_GetState(&i2c_port) != HAL_I2C_STATE_READY) {
-        if(!hal.stream_blocking_callback())
-            return false;
-    }
+    return wait_ready() && HAL_I2C_IsDeviceReady(&i2c_port, i2cAddr << 1, 4, 10) == HAL_OK;
+}
+
+bool i2c_send (i2c_address_t i2cAddr, uint8_t *buf, size_t size, bool block)
+{
+    if(!wait_ready())
+        return false;
 
     bool ok = HAL_I2C_Master_Transmit_IT(&i2c_port, i2cAddr << 1, buf, size) == HAL_OK;
 
-    if (ok && block) {
-        while (HAL_I2C_GetState(&i2c_port) != HAL_I2C_STATE_READY) {
-            if(!hal.stream_blocking_callback())
-                return false;
-        }
-    }
-
-    return ok;
+    return ok && (!block || wait_ready());
 }
 
-bool i2c_receive (uint_fast16_t i2cAddr, uint8_t *buf, size_t size, bool block)
+bool i2c_receive (i2c_address_t i2cAddr, uint8_t *buf, size_t size, bool block)
 {
-    //wait for bus to be ready
-    while (HAL_I2C_GetState(&i2c_port) != HAL_I2C_STATE_READY) {
-        if(!hal.stream_blocking_callback())
-            return false;
-    }
+    if(!wait_ready())
+        return false;
 
-    bool ok = HAL_I2C_Master_Receive_IT(&i2c_port, i2cAddr << 1, buf, size) == HAL_OK;
+    await_rx = HAL_I2C_Master_Receive_IT(&i2c_port, i2cAddr << 1, buf, size) == HAL_OK;
 
-    if (ok && block) {
-        while (HAL_I2C_GetState(&i2c_port) != HAL_I2C_STATE_READY) {
-            if(!hal.stream_blocking_callback())
-                return false;
-        }
-    }
-
-    return ok;
+    return await_rx && (!block || wait_ready());
 }
 
-void i2c_get_keycode (uint_fast16_t i2cAddr, keycode_callback_ptr callback)
+bool i2c_transfer (i2c_transfer_t *i2c, bool read)
 {
-    keycode = 0;
-    keypad_callback = callback;
-
-    HAL_I2C_Master_Receive_IT(&i2c_port, i2cAddr << 1, &keycode, 1);
-}
-
-void HAL_I2C_MasterRxCpltCallback(I2C_HandleTypeDef *hi2c)
-{
-    if(keypad_callback && keycode != 0) {
-        keypad_callback(keycode);
-        keypad_callback = NULL;
-    }
-}
-
-#if EEPROM_ENABLE
-
-nvs_transfer_result_t i2c_nvs_transfer (nvs_transfer_t *i2c, bool read)
-{
-    while (HAL_I2C_GetState(&i2c_port) != HAL_I2C_STATE_READY);
-
-//    while (HAL_I2C_IsDeviceReady(&i2c_port, (uint16_t)(0xA0), 3, 100) != HAL_OK);
+    if(!wait_ready())
+        return false;
 
     HAL_StatusTypeDef ret;
 
     if(read)
         ret = HAL_I2C_Mem_Read(&i2c_port, i2c->address << 1, i2c->word_addr, i2c->word_addr_bytes == 2 ? I2C_MEMADD_SIZE_16BIT : I2C_MEMADD_SIZE_8BIT, i2c->data, i2c->count, 100);
-    else {
+    else
         ret = HAL_I2C_Mem_Write(&i2c_port, i2c->address << 1, i2c->word_addr, i2c->word_addr_bytes == 2 ? I2C_MEMADD_SIZE_16BIT : I2C_MEMADD_SIZE_8BIT, i2c->data, i2c->count, 100);
-#if !EEPROM_IS_FRAM
-        hal.delay_ms(5, NULL);
-#endif
-    }
-    i2c->data += i2c->count;
 
-    return ret == HAL_OK ? NVS_TransferResult_OK : NVS_TransferResult_Failed;
+    return ret == HAL_OK;
 }
 
-#endif
+bool i2c_get_keycode (i2c_address_t i2cAddr, keycode_callback_ptr callback)
+{
+    if((await_rx = wait_ready() && HAL_I2C_Master_Receive_IT(&i2c_port, i2cAddr << 1, &keycode, 1) == HAL_OK)) {
+        keycode = 0;
+        keypad_callback = callback;
+    }
+
+    return await_rx;
+}
+
+void HAL_I2C_MasterRxCpltCallback (I2C_HandleTypeDef *hi2c)
+{
+    await_rx = false;
+
+    if(keypad_callback && keycode != 0) {
+        keypad_callback(keycode);
+        keypad_callback = NULL;
+    }
+}
 
 #if TRINAMIC_ENABLE && TRINAMIC_I2C
 
