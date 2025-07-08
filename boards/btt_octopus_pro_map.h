@@ -352,6 +352,14 @@
 //#define COPROC_BOOT0_PORT           
 //#define COPROC_BOOT0_PIN            
 
+#define COPROC_STREAM               2
+#define COPROC_RESET_PORT           GPIOG
+#define COPROC_RESET_PIN            7
+
+//Not needed since the enable pin is pulled high
+//#define COPROC_BOOT0_PORT           
+//#define COPROC_BOOT0_PIN     
+
 #define CAN_PORT                    GPIOD
 #define CAN_RX_PIN                  0
 #define CAN_TX_PIN                  1
